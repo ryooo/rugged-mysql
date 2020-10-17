@@ -583,7 +583,7 @@ static int init_db(MYSQL * db)
 
 static int init_statements(mysql_refdb_backend * backend)
 {
-	my_bool truth = 1;
+	int truth = 1;
 	static const char *sql_read =
 	    "SELECT ref FROM '" GIT2_REFDB_TABLE_NAME "' WHERE refname = ?;";
 
@@ -684,7 +684,7 @@ git_refdb_backend_mysql(git_refdb_backend ** backend_out,
 			unsigned long mysql_client_flag)
 {
 	mysql_refdb_backend *backend;
-	my_bool reconnect = 1;
+	int reconnect = 1;
 
 	backend = calloc(1, sizeof(mysql_refdb_backend));
 	if (backend == NULL) {
