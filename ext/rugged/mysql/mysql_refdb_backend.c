@@ -30,7 +30,7 @@ typedef struct mysql_refdb_backend {
 
 static int ref_error_notfound(const char *name)
 {
-	giterr_set(GITERR_REFERENCE, "Reference not found: %s", name);
+	giterr_set_str(GITERR_REFERENCE, "Reference not found: %s", name);
 	return GIT_ENOTFOUND;
 }
 
@@ -42,7 +42,7 @@ static const char *parse_symbolic(git_buf * ref_content)
 	refname_start = (const char *)git_buf_cstr(ref_content);
 
 	if (git_buf_len(ref_content) < header_len + 1) {
-		giterr_set(GITERR_REFERENCE, "Corrupted reference");
+		giterr_set_str(GITERR_REFERENCE, "Corrupted reference");
 		return NULL;
 	}
 
@@ -75,7 +75,7 @@ static int parse_oid(git_oid * oid, const char *filename, git_buf * ref_content)
 	}
 
  corrupted:
-	giterr_set(GITERR_REFERENCE, "Corrupted reference");
+	giterr_set_str(GITERR_REFERENCE, "Corrupted reference");
 	return -1;
 }
 
@@ -332,7 +332,7 @@ reference_path_available(mysql_refdb_backend * backend,
 			return -1;
 
 		if (exists) {
-			giterr_set(GITERR_REFERENCE,
+			giterr_set_str(GITERR_REFERENCE,
 				   "Failed to write reference '%s': a reference with "
 				   "that name already exists.", new_ref);
 			return GIT_EEXISTS;
@@ -387,7 +387,7 @@ mysql_refdb_backend__write(git_refdb_backend * _backend,
 	}
 
 	if (mysql_stmt_execute(backend->st_write) != 0) {
-		giterr_set(GITERR_ODB,
+		giterr_set_str(GITERR_ODB,
 			   "Error writing reference to Sqlite RefDB backend");
 		return GIT_ERROR;
 	}
@@ -541,7 +541,7 @@ static int create_table(MYSQL * db)
 	    " DEFAULT CHARSET=utf8 COLLATE=utf8_bin;";
 
 	if (mysql_real_query(db, sql_creat, strlen(sql_creat)) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating table for MySql RefDB backend");
 		return GIT_ERROR;
 	}
@@ -598,76 +598,76 @@ static int init_statements(mysql_refdb_backend * backend)
 
 	backend->st_read = mysql_stmt_init(backend->db);
 	if (backend->st_read == NULL) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_attr_set
 	    (backend->st_read, STMT_ATTR_UPDATE_MAX_LENGTH, &truth) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_prepare(backend->st_read, sql_read, strlen(sql_read)) !=
 	    0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 
 	backend->st_read_all = mysql_stmt_init(backend->db);
 	if (backend->st_read_all == NULL) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_attr_set
 	    (backend->st_read_all, STMT_ATTR_UPDATE_MAX_LENGTH, &truth) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_prepare
 	    (backend->st_read_all, sql_read_all, strlen(sql_read_all)) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 
 	backend->st_write = mysql_stmt_init(backend->db);
 	if (backend->st_write == NULL) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_attr_set
 	    (backend->st_write, STMT_ATTR_UPDATE_MAX_LENGTH, &truth) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_prepare(backend->st_write, sql_write, strlen(sql_write))
 	    != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 
 	backend->st_delete = mysql_stmt_init(backend->db);
 	if (backend->st_delete == NULL) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_attr_set
 	    (backend->st_delete, STMT_ATTR_UPDATE_MAX_LENGTH, &truth) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
 	if (mysql_stmt_prepare
 	    (backend->st_delete, sql_delete, strlen(sql_delete)) != 0) {
-		giterr_set(GITERR_REFERENCE,
+		giterr_set_str(GITERR_REFERENCE,
 			   "Error creating prepared statement for MySql RefDB backend");
 		return GIT_ERROR;
 	}
