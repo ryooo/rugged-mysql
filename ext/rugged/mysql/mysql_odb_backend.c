@@ -359,7 +359,7 @@ static int init_db(MYSQL * db)
 
 static int init_statements(mysql_odb_backend * backend)
 {
-	my_bool truth = 1;
+	int truth = 1;
 
 	static const char *sql_read =
 	    "SELECT `type`, `size`, UNCOMPRESS(`data`) FROM `"
@@ -432,7 +432,7 @@ git_odb_backend_mysql(git_odb_backend ** backend_out, const char *mysql_host,
 {
 	mysql_odb_backend *backend;
 	int error;
-	my_bool reconnect;
+	int reconnect;
 
 	backend = calloc(1, sizeof(mysql_odb_backend));
 	if (backend == NULL) {
