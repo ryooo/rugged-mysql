@@ -13,6 +13,7 @@ $CFLAGS << " -I#{RUGGED_EXT_DIR}/vendor/libgit2/src"
 $CFLAGS << ' -g'
 $CFLAGS << ' -O3' unless $CFLAGS[/-O\d/]
 $CFLAGS << ' -Wall -Wno-comment -Wno-sizeof-pointer-memaccess'
+$CFLAGS << ' -DLIBGIT2_NO_FEATURES_H'
 
 
 MAKE = find_executable('gmake') || find_executable('make')
